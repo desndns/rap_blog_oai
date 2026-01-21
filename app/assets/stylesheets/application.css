@@ -49,6 +49,15 @@ body {
   flex-wrap: wrap;
 }
 
+.site-search input[type="search"] {
+  border-radius: 999px;
+  border: 1px solid #c9bba7;
+  padding: 8px 14px;
+  font-family: "Inter", "Helvetica", sans-serif;
+  font-size: 0.95rem;
+  background: #ffffff;
+}
+
 .site-header__meta {
   font-size: 0.85rem;
   color: #6b5f50;
@@ -161,6 +170,14 @@ a {
   padding: 24px;
   border: 1px solid #e0d6c8;
   box-shadow: 0 12px 24px rgba(47, 36, 23, 0.06);
+}
+
+.form--inline {
+  margin-bottom: 24px;
+}
+
+.form--inline .form__actions {
+  justify-content: flex-start;
 }
 
 .form__field {

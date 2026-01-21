@@ -4,7 +4,8 @@ class PostsController < ApplicationController
   before_action :require_post_owner, only: %i[edit update destroy]
 
   def index
-    @posts = Post.order(created_at: :desc)
+    @query = params[:q]
+    @posts = Post.search(@query).order(created_at: :desc)
   end
 
   def show

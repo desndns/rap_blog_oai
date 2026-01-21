@@ -30,6 +30,9 @@
           <%= link_to "Rap Blog", root_path %>
         </div>
         <nav class="site-header__nav">
+          <%= form_with url: posts_path, method: :get, class: "site-search" do |form| %>
+            <%= form.search_field :q, value: params[:q], placeholder: "Search...", aria: { label: "Search posts and comments" } %>
+          <% end %>
           <% if logged_in? %>
             <span class="site-header__meta"><%= current_user.email %><%= " · admin" if admin? %></span>
             <%= link_to "New post", new_post_path, class: "button button--ghost" %>
