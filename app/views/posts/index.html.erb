@@ -10,14 +10,22 @@
     <div class="post-list">
       <% @posts.each do |post| %>
         <article class="post-card">
+          <% if post.images.attached? %>
+            <div class="post-card__image">
+              <%= image_tag post.images.first, class: "post-card__image-tag" %>
+            </div>
+          <% end %>
           <h2><%= link_to post.title, post %></h2>
           <p class="post-card__meta">
-            <%= time_ago_in_words(post.created_at) %> ago
+            <%= post.user.email %> · <%= time_ago_in_words(post.created_at) %> ago
           </p>
           <p><%= truncate(post.body, length: 200) %></p>
           <div class="post-card__actions">
             <%= link_to "Read", post, class: "button button--ghost" %>
-            <%= link_to "Edit", edit_post_path(post), class: "button button--ghost" %>
+            <% if logged_in? && (admin? || post.user == current_user) %>
+              <%= link_to "Edit", edit_post_path(post), class: "button button--ghost" %>
+              <%= link_to "Delete", post, data: { turbo_method: :delete, turbo_confirm: "Delete this post?" }, class: "button button--danger" %>
+            <% end %>
           </div>
         </article>
       <% end %>

@@ -20,6 +20,16 @@
     <%= form.text_area :body, rows: 10, required: true %>
   </div>
 
+  <div class="form__field">
+    <%= form.label :images, "Images" %>
+    <%= form.file_field :images, multiple: true, accept: "image/*" %>
+  </div>
+
+  <div class="form__field">
+    <%= form.label :files, "Files" %>
+    <%= form.file_field :files, multiple: true %>
+  </div>
+
   <div class="form__actions">
     <%= form.submit class: "button" %>
     <%= link_to "Back", posts_path, class: "button button--ghost" %>

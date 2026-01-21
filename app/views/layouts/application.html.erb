@@ -24,6 +24,28 @@
   </head>
 
   <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <div class="site-header__brand">
+          <%= link_to "Rap Blog", root_path %>
+        </div>
+        <nav class="site-header__nav">
+          <% if logged_in? %>
+            <span class="site-header__meta"><%= current_user.email %><%= " · admin" if admin? %></span>
+            <%= link_to "New post", new_post_path, class: "button button--ghost" %>
+            <%= button_to "Sign out", logout_path, method: :delete, class: "button button--ghost" %>
+          <% else %>
+            <%= link_to "Sign in", login_path, class: "button button--ghost" %>
+            <%= link_to "Create account", signup_path, class: "button" %>
+          <% end %>
+        </nav>
+      </div>
+    </header>
+
+    <% flash.each do |type, message| %>
+      <div class="flash flash--<%= type %>"><%= message %></div>
+    <% end %>
+
     <%= yield %>
   </body>
 </html>

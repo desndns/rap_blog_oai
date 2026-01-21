@@ -1,5 +1,7 @@
 class PostsController < ApplicationController
   before_action :set_post, only: %i[show edit update destroy]
+  before_action :require_login, except: %i[index show]
+  before_action :require_post_owner, only: %i[edit update destroy]
 
   def index
     @posts = Post.order(created_at: :desc)
@@ -16,6 +18,7 @@ class PostsController < ApplicationController
 
   def create
     @post = Post.new(post_params)
+    @post.user = current_user
 
     if @post.save
       redirect_to @post, notice: "Post created."
@@ -47,6 +50,12 @@ class PostsController < ApplicationController
   end
 
   def post_params
-    params.require(:post).permit(:title, :body)
+    params.require(:post).permit(:title, :body, images: [], files: [])
+  end
+
+  def require_post_owner
+    return if admin? || @post.user == current_user
+
+    redirect_to @post, alert: "You can only change your own posts."
   end
 end

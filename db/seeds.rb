@@ -7,3 +7,74 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+require "securerandom"
+
+admin_email = ENV.fetch("ADMIN_EMAIL", "admin@example.com")
+admin_password = ENV.fetch("ADMIN_PASSWORD", "password123")
+
+admin = User.find_or_create_by!(email: admin_email) do |user|
+  user.password = admin_password
+  user.password_confirmation = admin_password
+  user.admin = true
+end
+
+names = %w[Lex Rima Jazz Echo Nova Blaze Vibe Kato Mira Zed Lyra]
+topics = [
+  "Flow and cadence",
+  "Storytelling bars",
+  "Studio session notes",
+  "Sampling deep cuts",
+  "Live show recap",
+  "Album review",
+  "Cypher highlights",
+  "Lyric breakdown"
+]
+sentences = [
+  "The hook lands with a clean pocket and a late snare.",
+  "Drums knock but leave room for the bass to breathe.",
+  "Bars are tight, no filler, just straight momentum.",
+  "The bridge switches up the rhythm and it works.",
+  "Punchlines are stacked with a playful edge.",
+  "The mix keeps the vocals front without washing the beat.",
+  "This track feels like a midnight drive through the city.",
+  "There is a calm confidence in every line.",
+  "The cadence flips twice and still feels smooth.",
+  "The outro leaves you wanting another verse."
+]
+
+def random_paragraph(sentences, count)
+  Array.new(count) { sentences.sample }.join(" ")
+end
+
+users = Array.new(6) do
+  User.create!(
+    email: "user-#{SecureRandom.hex(3)}@example.com",
+    password: "password123",
+    password_confirmation: "password123",
+    admin: false
+  )
+end
+
+users << admin
+
+posts = Array.new(12) do
+  author = users.sample
+  Post.create!(
+    user: author,
+    title: "#{topics.sample} — #{SecureRandom.hex(2).upcase}",
+    body: random_paragraph(sentences, 4 + rand(4))
+  )
+end
+
+posts.each do |post|
+  rand(2..6).times do
+    commenter = users.sample
+    Comment.create!(
+      post: post,
+      user: commenter,
+      author: commenter.email,
+      body: random_paragraph(sentences, 2 + rand(3))
+    )
+  end
+end
