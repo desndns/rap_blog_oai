@@ -3,6 +3,7 @@ class Post < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many_attached :images
   has_many_attached :files
+  include Taggable
 
   validates :title, presence: true
   validates :body, presence: true

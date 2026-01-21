@@ -20,6 +20,13 @@
             <%= post.user.email %> · <%= time_ago_in_words(post.created_at) %> ago
           </p>
           <p><%= truncate(post.body, length: 200) %></p>
+          <% if post.tags.any? %>
+            <div class="tag-list">
+              <% post.tags.each do |tag| %>
+                <span class="tag">#<%= tag.name %></span>
+              <% end %>
+            </div>
+          <% end %>
           <div class="post-card__actions">
             <%= link_to "Read", post, class: "button button--ghost" %>
             <% if logged_in? && (admin? || post.user == current_user) %>

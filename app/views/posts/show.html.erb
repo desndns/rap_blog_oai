@@ -18,6 +18,14 @@
     <%= simple_format(@post.body) %>
   </article>
 
+  <% if @post.tags.any? %>
+    <div class="tag-list">
+      <% @post.tags.each do |tag| %>
+        <span class="tag">#<%= tag.name %></span>
+      <% end %>
+    </div>
+  <% end %>
+
   <% if @post.images.attached? || @post.files.attached? %>
     <section class="attachments">
       <% if @post.images.attached? %>
@@ -66,6 +74,11 @@
         </div>
 
         <div class="form__field">
+          <%= form.label :tag_list, "Tags (comma separated)" %>
+          <%= form.text_field :tag_list, placeholder: "feedback, punchlines" %>
+        </div>
+
+        <div class="form__field">
           <%= form.label :images, "Images" %>
           <%= form.file_field :images, multiple: true, accept: "image/*" %>
         </div>
@@ -93,6 +106,13 @@
               <span class="comment__meta"><%= time_ago_in_words(comment.created_at) %> ago</span>
             </header>
             <p><%= simple_format(comment.body) %></p>
+            <% if comment.tags.any? %>
+              <div class="tag-list">
+                <% comment.tags.each do |tag| %>
+                  <span class="tag">#<%= tag.name %></span>
+                <% end %>
+              </div>
+            <% end %>
             <% if comment.images.attached? || comment.files.attached? %>
               <div class="attachments attachments--compact">
                 <% if comment.images.attached? %>

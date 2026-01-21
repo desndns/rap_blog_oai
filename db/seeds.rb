@@ -30,6 +30,7 @@ topics = [
   "Cypher highlights",
   "Lyric breakdown"
 ]
+tags = %w[boom-bap trap freestyle review stage studio bars hooks]
 sentences = [
   "The hook lands with a clean pocket and a late snare.",
   "Drums knock but leave room for the bass to breathe.",
@@ -63,7 +64,8 @@ posts = Array.new(12) do
   Post.create!(
     user: author,
     title: "#{topics.sample} — #{SecureRandom.hex(2).upcase}",
-    body: random_paragraph(sentences, 4 + rand(4))
+    body: random_paragraph(sentences, 4 + rand(4)),
+    tag_list: tags.sample(2 + rand(3)).join(", ")
   )
 end
 
@@ -74,7 +76,8 @@ posts.each do |post|
       post: post,
       user: commenter,
       author: commenter.email,
-      body: random_paragraph(sentences, 2 + rand(3))
+      body: random_paragraph(sentences, 2 + rand(3)),
+      tag_list: tags.sample(1 + rand(2)).join(", ")
     )
   end
 end

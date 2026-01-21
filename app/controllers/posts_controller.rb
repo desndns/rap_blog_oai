@@ -51,7 +51,7 @@ class PostsController < ApplicationController
   end
 
   def post_params
-    params.require(:post).permit(:title, :body, images: [], files: [])
+    params.require(:post).permit(:title, :body, :tag_list, images: [], files: [])
   end
 
   def require_post_owner

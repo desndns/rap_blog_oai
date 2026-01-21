@@ -21,6 +21,11 @@
   </div>
 
   <div class="form__field">
+    <%= form.label :tag_list, "Tags (comma separated)" %>
+    <%= form.text_field :tag_list, placeholder: "boom-bap, live-show, review" %>
+  </div>
+
+  <div class="form__field">
     <%= form.label :images, "Images" %>
     <%= form.file_field :images, multiple: true, accept: "image/*" %>
   </div>

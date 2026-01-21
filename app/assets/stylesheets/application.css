@@ -296,6 +296,21 @@ a {
   gap: 6px;
 }
 
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  background: #2d2417;
+  color: #f5efe6;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-family: "Inter", "Helvetica", sans-serif;
+  font-size: 0.85rem;
+}
+
 .empty {
   font-style: italic;
   color: #6b5f50;
