@@ -6,7 +6,19 @@ class PostsController < ApplicationController
   def index
     @query = params[:q]
     @tag = params[:tag]
-    @posts = Post.search(@query).tagged_with(@tag).order(created_at: :desc)
+    @sort = params[:sort].presence || "date_desc"
+
+    base = Post.search(@query).tagged_with(@tag).left_joins(:user, :tags).distinct
+    @posts = apply_sort(base, @sort)
+  end
+
+  def find
+    @query = params[:q]
+    @tag = params[:tag]
+    @sort = params[:sort].presence || "date_desc"
+
+    base = Post.search(@query).tagged_with(@tag).left_joins(:user, :tags).distinct
+    @posts = apply_sort(base, @sort)
   end
 
   def show
@@ -59,5 +71,18 @@ class PostsController < ApplicationController
     return if admin? || @post.user == current_user
 
     redirect_to @post, alert: "You can only change your own posts."
+  end
+
+  def apply_sort(scope, sort)
+    case sort
+    when "date_asc"
+      scope.order(created_at: :asc)
+    when "author"
+      scope.order(Arel.sql("users.email ASC"), created_at: :desc)
+    when "tags"
+      scope.group("posts.id").order(Arel.sql("MIN(tags.name) ASC"), created_at: :desc)
+    else
+      scope.order(created_at: :desc)
+    end
   end
 end

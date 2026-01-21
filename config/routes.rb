@@ -13,6 +13,8 @@ Rails.application.routes.draw do
     resources :comments, only: %i[create destroy]
   end
 
+  get "find" => "posts#find"
+
   get "signup" => "users#new"
   post "signup" => "users#create"
   get "login" => "sessions#new"

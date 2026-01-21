@@ -1,0 +1,23 @@
+<% content_for :title, "Найти" %>
+
+<div class="page">
+  <header class="page__header">
+    <h1>Найти</h1>
+  </header>
+
+  <div class="post-rows">
+    <% @posts.each do |post| %>
+      <div class="post-row">
+        <div class="post-row__title">
+          <%= link_to post.title, post %>
+        </div>
+        <div class="post-row__author"><%= post.user.email %></div>
+        <div class="post-row__tags">
+          <% post.tags.each do |tag| %>
+            <%= link_to "##{tag.name}", find_path(tag: tag.name, q: @query, sort: @sort), class: "tag" %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

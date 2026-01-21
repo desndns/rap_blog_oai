@@ -36,6 +36,7 @@
             <% end %>
             <%= form.search_field :q, value: params[:q], placeholder: "Search...", aria: { label: "Search posts and comments" } %>
           <% end %>
+          <%= link_to "НАЙТИ", find_path, class: "button button--ghost" %>
           <% if logged_in? %>
             <span class="site-header__meta"><%= current_user.email %><%= " · admin" if admin? %></span>
             <%= link_to "New post", new_post_path, class: "button button--ghost" %>
