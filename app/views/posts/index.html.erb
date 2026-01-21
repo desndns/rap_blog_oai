@@ -23,7 +23,7 @@
           <% if post.tags.any? %>
             <div class="tag-list">
               <% post.tags.each do |tag| %>
-                <span class="tag">#<%= tag.name %></span>
+                <%= link_to "##{tag.name}", posts_path(tag: tag.name, q: @query), class: "tag#{' tag--active' if @tag == tag.name}" %>
               <% end %>
             </div>
           <% end %>

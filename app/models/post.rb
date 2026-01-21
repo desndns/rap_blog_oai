@@ -17,4 +17,16 @@ class Post < ApplicationRecord
       term: term
     ).distinct
   }
+
+  scope :tagged_with, lambda { |name|
+    return all if name.blank?
+
+    tag = Tag.find_by(name: name.to_s.strip.downcase)
+    return none unless tag
+
+    post_ids = tag.taggings.where(taggable_type: "Post").select(:taggable_id)
+    comment_post_ids = Comment.joins(:taggings).where(taggings: { tag_id: tag.id }).select(:post_id)
+
+    where(id: post_ids).or(where(id: comment_post_ids)).distinct
+  }
 end

@@ -5,7 +5,8 @@ class PostsController < ApplicationController
 
   def index
     @query = params[:q]
-    @posts = Post.search(@query).order(created_at: :desc)
+    @tag = params[:tag]
+    @posts = Post.search(@query).tagged_with(@tag).order(created_at: :desc)
   end
 
   def show

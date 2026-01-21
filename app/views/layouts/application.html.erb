@@ -31,6 +31,9 @@
         </div>
         <nav class="site-header__nav">
           <%= form_with url: posts_path, method: :get, class: "site-search" do |form| %>
+            <% if params[:tag].present? %>
+              <%= form.hidden_field :tag, value: params[:tag] %>
+            <% end %>
             <%= form.search_field :q, value: params[:q], placeholder: "Search...", aria: { label: "Search posts and comments" } %>
           <% end %>
           <% if logged_in? %>
@@ -47,6 +50,14 @@
 
     <% flash.each do |type, message| %>
       <div class="flash flash--<%= type %>"><%= message %></div>
+    <% end %>
+
+    <% if params[:tag].present? %>
+      <div class="active-filter">
+        <span>Tag:</span>
+        <span class="tag tag--active">#<%= params[:tag] %></span>
+        <%= link_to "Clear tag", posts_path(q: params[:q]), class: "button button--ghost" %>
+      </div>
     <% end %>
 
     <%= yield %>

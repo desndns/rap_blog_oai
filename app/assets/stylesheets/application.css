@@ -77,6 +77,17 @@ body {
   border-color: #e8b5ad;
 }
 
+.active-filter {
+  max-width: 860px;
+  margin: 16px auto 0;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 8px 24px;
+  color: #6b5f50;
+  flex-wrap: wrap;
+}
+
 .page {
   max-width: 860px;
   margin: 0 auto;
@@ -309,6 +320,16 @@ a {
   border-radius: 999px;
   font-family: "Inter", "Helvetica", sans-serif;
   font-size: 0.85rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.tag:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 14px rgba(45, 36, 23, 0.18);
+}
+
+.tag--active {
+  background: #7b1f12;
 }
 
 .empty {

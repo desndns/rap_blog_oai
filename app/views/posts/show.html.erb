@@ -21,7 +21,7 @@
   <% if @post.tags.any? %>
     <div class="tag-list">
       <% @post.tags.each do |tag| %>
-        <span class="tag">#<%= tag.name %></span>
+        <%= link_to "##{tag.name}", posts_path(tag: tag.name), class: "tag" %>
       <% end %>
     </div>
   <% end %>
@@ -109,7 +109,7 @@
             <% if comment.tags.any? %>
               <div class="tag-list">
                 <% comment.tags.each do |tag| %>
-                  <span class="tag">#<%= tag.name %></span>
+                  <%= link_to "##{tag.name}", posts_path(tag: tag.name), class: "tag" %>
                 <% end %>
               </div>
             <% end %>
