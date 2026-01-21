@@ -1,0 +1,28 @@
+<% content_for :title, "Posts" %>
+
+<div class="page">
+  <header class="page__header">
+    <h1>Rap Blog</h1>
+    <%= link_to "New post", new_post_path, class: "button" %>
+  </header>
+
+  <% if @posts.any? %>
+    <div class="post-list">
+      <% @posts.each do |post| %>
+        <article class="post-card">
+          <h2><%= link_to post.title, post %></h2>
+          <p class="post-card__meta">
+            <%= time_ago_in_words(post.created_at) %> ago
+          </p>
+          <p><%= truncate(post.body, length: 200) %></p>
+          <div class="post-card__actions">
+            <%= link_to "Read", post, class: "button button--ghost" %>
+            <%= link_to "Edit", edit_post_path(post), class: "button button--ghost" %>
+          </div>
+        </article>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="empty">No posts yet. Start the conversation.</p>
+  <% end %>
+</div>

@@ -1,0 +1,67 @@
+<% content_for :title, @post.title %>
+
+<div class="page">
+  <header class="page__header">
+    <div>
+      <h1><%= @post.title %></h1>
+      <p class="post-card__meta">Published <%= time_ago_in_words(@post.created_at) %> ago</p>
+    </div>
+    <div class="page__actions">
+      <%= link_to "Edit", edit_post_path(@post), class: "button button--ghost" %>
+      <%= link_to "Delete", @post, data: { turbo_method: :delete, turbo_confirm: "Delete this post?" }, class: "button button--danger" %>
+    </div>
+  </header>
+
+  <article class="post-body">
+    <%= simple_format(@post.body) %>
+  </article>
+
+  <section class="comments">
+    <h2>Comments</h2>
+
+    <%= form_with model: [@post, @comment], class: "form" do |form| %>
+      <% if @comment.errors.any? %>
+        <div class="form__errors">
+          <h3><%= pluralize(@comment.errors.count, "error") %> blocked this comment</h3>
+          <ul>
+            <% @comment.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="form__field">
+        <%= form.label :author %>
+        <%= form.text_field :author, required: true %>
+      </div>
+
+      <div class="form__field">
+        <%= form.label :body, "Comment" %>
+        <%= form.text_area :body, rows: 4, required: true %>
+      </div>
+
+      <div class="form__actions">
+        <%= form.submit "Add comment", class: "button" %>
+        <%= link_to "Back", posts_path, class: "button button--ghost" %>
+      </div>
+    <% end %>
+
+    <% if @comments.any? %>
+      <div class="comment-list">
+        <% @comments.each do |comment| %>
+          <article class="comment">
+            <header>
+              <strong><%= comment.author %></strong>
+              <span class="comment__meta"><%= time_ago_in_words(comment.created_at) %> ago</span>
+            </header>
+            <p><%= simple_format(comment.body) %></p>
+            <%= link_to "Delete", [@post, comment], data: { turbo_method: :delete, turbo_confirm: "Remove this comment?" }, class: "button button--ghost" %>
+          </article>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="empty">No comments yet.</p>
+    <% end %>
+  </section>
+</div>
