@@ -74,11 +74,6 @@
         </div>
 
         <div class="form__field">
-          <%= form.label :tag_list, "Tags (comma separated)" %>
-          <%= form.text_field :tag_list, placeholder: "feedback, punchlines" %>
-        </div>
-
-        <div class="form__field">
           <%= form.label :images, "Images" %>
           <%= form.file_field :images, multiple: true, accept: "image/*" %>
         </div>
@@ -106,13 +101,6 @@
               <span class="comment__meta"><%= time_ago_in_words(comment.created_at) %> ago</span>
             </header>
             <p><%= simple_format(comment.body) %></p>
-            <% if comment.tags.any? %>
-              <div class="tag-list">
-                <% comment.tags.each do |tag| %>
-                  <%= link_to "##{tag.name}", posts_path(tags: [tag.name]), class: "tag" %>
-                <% end %>
-              </div>
-            <% end %>
             <% if comment.images.attached? || comment.files.attached? %>
               <div class="attachments attachments--compact">
                 <% if comment.images.attached? %>

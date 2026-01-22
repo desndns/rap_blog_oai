@@ -30,12 +30,8 @@ class Post < ApplicationRecord
 
     post_taggings = Tagging.where(taggable_type: "Post", tag_id: tag_ids)
       .select("taggable_id AS post_id, tag_id")
-    comment_taggings = Tagging.joins("INNER JOIN comments ON comments.id = taggings.taggable_id")
-      .where(taggable_type: "Comment", tag_id: tag_ids)
-      .select("comments.post_id AS post_id, taggings.tag_id")
-    union_sql = "#{post_taggings.to_sql} UNION ALL #{comment_taggings.to_sql}"
 
-    joins("INNER JOIN (#{union_sql}) AS combined_tags ON combined_tags.post_id = posts.id")
+    joins("INNER JOIN (#{post_taggings.to_sql}) AS combined_tags ON combined_tags.post_id = posts.id")
       .group("posts.id")
       .having("COUNT(DISTINCT combined_tags.tag_id) = ?", tag_count)
   }

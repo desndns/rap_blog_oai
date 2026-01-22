@@ -107,12 +107,11 @@ end
 posts.each do |post|
   rand(2..5).times do
     commenter = users.sample
-    Comment.create!(
-      post: post,
-      user: commenter,
-      author: commenter.email,
-      body: body_parts.sample(2).join(" "),
-      tag_list: tags.sample(1 + rand(2)).join(", ")
-    )
-  end
+  Comment.create!(
+    post: post,
+    user: commenter,
+    author: commenter.email,
+    body: body_parts.sample(2).join(" ")
+  )
+end
 end
