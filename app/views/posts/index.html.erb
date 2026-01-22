@@ -9,7 +9,7 @@
   <% if @posts.any? %>
     <div class="post-list">
       <% @posts.each do |post| %>
-        <article class="post-card">
+        <article class="post-card" data-post-url="<%= post_path(post) %>" tabindex="0" role="link">
           <% if post.images.attached? %>
             <div class="post-card__image">
               <%= image_tag post.images.first, class: "post-card__image-tag" %>
