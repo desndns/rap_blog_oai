@@ -30,17 +30,24 @@
           <%= link_to "Rap Blog", root_path %>
         </div>
         <nav class="site-header__nav">
+          <%= link_to "НАЙТИ", find_path, class: "button button--ghost" %>
           <%= form_with url: posts_path, method: :get, class: "site-search" do |form| %>
             <% if params[:tag].present? %>
               <%= form.hidden_field :tag, value: params[:tag] %>
             <% end %>
             <%= form.search_field :q, value: params[:q], placeholder: "Search...", aria: { label: "Search posts and comments" } %>
           <% end %>
-          <%= link_to "НАЙТИ", find_path, class: "button button--ghost" %>
           <% if logged_in? %>
-            <span class="site-header__meta"><%= current_user.email %><%= " · admin" if admin? %></span>
-            <%= link_to "New post", new_post_path, class: "button button--ghost" %>
-            <%= button_to "Sign out", logout_path, method: :delete, class: "button button--ghost" %>
+            <details class="user-menu">
+              <summary class="button button--ghost user-menu__summary">
+                <span class="user-menu__name"><%= current_user.email %><%= " · admin" if admin? %></span>
+                <span class="user-menu__chevron">▾</span>
+              </summary>
+              <div class="user-menu__panel">
+                <%= link_to "Edit profile", edit_account_path, class: "user-menu__item" %>
+                <%= button_to "Sign out", logout_path, method: :delete, class: "user-menu__item user-menu__item--danger", form: { class: "user-menu__form" } %>
+              </div>
+            </details>
           <% else %>
             <%= link_to "Sign in", login_path, class: "button button--ghost" %>
             <%= link_to "Create account", signup_path, class: "button" %>
@@ -57,7 +64,8 @@
       <div class="active-filter">
         <span>Tag:</span>
         <span class="tag tag--active">#<%= params[:tag] %></span>
-        <%= link_to "Clear tag", posts_path(q: params[:q]), class: "button button--ghost" %>
+        <% clear_tag_path = action_name == "find" ? find_path(q: params[:q], sort: params[:sort], from: params[:from], to: params[:to], user_id: params[:user_id]) : posts_path(q: params[:q]) %>
+        <%= link_to "Clear tag", clear_tag_path, class: "button button--ghost" %>
       </div>
     <% end %>
 

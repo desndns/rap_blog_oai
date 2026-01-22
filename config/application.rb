@@ -23,5 +23,8 @@ module RapBlogOai
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # Allow seeded SVG placeholders to render inline.
+    config.active_storage.content_types_allowed_inline += ["image/svg+xml"]
   end
 end

@@ -5,16 +5,51 @@
     <h1>Найти</h1>
   </header>
 
+  <%= form_with url: find_path, method: :get, class: "form form--inline" do |form| %>
+    <% if @query.present? %>
+      <%= form.hidden_field :q, value: @query %>
+    <% end %>
+    <% if @tag.present? %>
+      <%= form.hidden_field :tag, value: @tag %>
+    <% end %>
+    <% if @sort.present? %>
+      <%= form.hidden_field :sort, value: @sort %>
+    <% end %>
+    <% if @user_id.present? %>
+      <%= form.hidden_field :user_id, value: @user_id %>
+    <% end %>
+
+    <div class="form__field">
+      <%= form.label :from, "Дата от" %>
+      <%= form.date_field :from, value: params[:from] %>
+    </div>
+    <div class="form__field">
+      <%= form.label :to, "Дата до" %>
+      <%= form.date_field :to, value: params[:to] %>
+    </div>
+
+    <div class="form__actions">
+      <%= form.submit "Применить", class: "button" %>
+      <%= link_to "Сбросить", find_path(q: @query, tag: @tag, sort: @sort, user_id: @user_id), class: "button button--ghost" %>
+    </div>
+  <% end %>
+
   <div class="post-rows">
     <% @posts.each do |post| %>
       <div class="post-row">
         <div class="post-row__title">
           <%= link_to post.title, post %>
         </div>
-        <div class="post-row__author"><%= post.user.email %></div>
+        <div class="post-row__author">
+          <%= link_to post.user.email, find_path(user_id: post.user_id, q: @query, tag: @tag, sort: @sort, from: params[:from], to: params[:to]), class: "post-row__author-link" %>
+          <% post_date = post.created_at.to_date %>
+          <%= link_to post_date.strftime("%d.%m.%Y"),
+            find_path(user_id: @user_id, q: @query, tag: @tag, sort: @sort, from: post_date, to: post_date),
+            class: "post-row__date" %>
+        </div>
         <div class="post-row__tags">
           <% post.tags.each do |tag| %>
-            <%= link_to "##{tag.name}", find_path(tag: tag.name, q: @query, sort: @sort), class: "tag" %>
+            <%= link_to "##{tag.name}", find_path(tag: tag.name, q: @query, sort: @sort, from: params[:from], to: params[:to], user_id: @user_id), class: "tag" %>
           <% end %>
         </div>
       </div>

@@ -1,0 +1,40 @@
+<% content_for :title, "Edit account" %>
+
+<div class="page">
+  <header class="page__header">
+    <h1>Edit account</h1>
+  </header>
+
+  <%= form_with model: @user, url: account_path, method: :patch, class: "form" do |form| %>
+    <% if @user.errors.any? %>
+      <div class="form__errors">
+        <h2><%= pluralize(@user.errors.count, "error") %> blocked this update</h2>
+        <ul>
+          <% @user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form__field">
+      <%= form.label :email %>
+      <%= form.email_field :email, required: true, autofocus: true %>
+    </div>
+
+    <div class="form__field">
+      <%= form.label :password, "New password" %>
+      <%= form.password_field :password, autocomplete: "new-password" %>
+    </div>
+
+    <div class="form__field">
+      <%= form.label :password_confirmation, "Confirm new password" %>
+      <%= form.password_field :password_confirmation, autocomplete: "new-password" %>
+    </div>
+
+    <div class="form__actions">
+      <%= form.submit "Save changes", class: "button" %>
+      <%= link_to "Back", root_path, class: "button button--ghost" %>
+    </div>
+  <% end %>
+</div>

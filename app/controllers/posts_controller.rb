@@ -7,8 +7,13 @@ class PostsController < ApplicationController
     @query = params[:q]
     @tag = params[:tag]
     @sort = params[:sort].presence || "date_desc"
+    @from = parse_date(params[:from])
+    @to = parse_date(params[:to])
+    @user_id = params[:user_id].presence
 
     base = Post.search(@query).tagged_with(@tag).left_joins(:user, :tags).distinct
+    base = apply_date_range(base, @from, @to)
+    base = apply_user_filter(base, @user_id)
     @posts = apply_sort(base, @sort)
   end
 
@@ -16,8 +21,13 @@ class PostsController < ApplicationController
     @query = params[:q]
     @tag = params[:tag]
     @sort = params[:sort].presence || "date_desc"
+    @from = parse_date(params[:from])
+    @to = parse_date(params[:to])
+    @user_id = params[:user_id].presence
 
     base = Post.search(@query).tagged_with(@tag).left_joins(:user, :tags).distinct
+    base = apply_date_range(base, @from, @to)
+    base = apply_user_filter(base, @user_id)
     @posts = apply_sort(base, @sort)
   end
 
@@ -45,7 +55,7 @@ class PostsController < ApplicationController
   end
 
   def update
-    if @post.update(post_params)
+    if @post.update(post_update_params)
       redirect_to @post, notice: "Post updated."
     else
       render :edit, status: :unprocessable_entity
@@ -67,6 +77,10 @@ class PostsController < ApplicationController
     params.require(:post).permit(:title, :body, :tag_list, images: [], files: [])
   end
 
+  def post_update_params
+    strip_empty_attachments(post_params, :images, :files)
+  end
+
   def require_post_owner
     return if admin? || @post.user == current_user
 
@@ -84,5 +98,31 @@ class PostsController < ApplicationController
     else
       scope.order(created_at: :desc)
     end
+  end
+
+  def apply_date_range(scope, from_date, to_date)
+    return scope unless from_date || to_date
+
+    if from_date && to_date
+      scope.where(created_at: from_date.beginning_of_day..to_date.end_of_day)
+    elsif from_date
+      scope.where("posts.created_at >= ?", from_date.beginning_of_day)
+    else
+      scope.where("posts.created_at <= ?", to_date.end_of_day)
+    end
+  end
+
+  def apply_user_filter(scope, user_id)
+    return scope if user_id.blank?
+
+    scope.where(posts: { user_id: user_id })
+  end
+
+  def parse_date(value)
+    return nil if value.blank?
+
+    Date.iso8601(value)
+  rescue Date::Error
+    nil
   end
 end

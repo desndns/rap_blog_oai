@@ -35,6 +35,10 @@ class CommentsController < ApplicationController
   end
 
   def comment_params
-    params.require(:comment).permit(:body, :tag_list, images: [], files: [])
+    strip_empty_attachments(
+      params.require(:comment).permit(:body, :tag_list, images: [], files: []),
+      :images,
+      :files
+    )
   end
 end

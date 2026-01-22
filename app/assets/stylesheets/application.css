@@ -63,6 +63,77 @@ body {
   color: #6b5f50;
 }
 
+.user-menu {
+  position: relative;
+}
+
+.user-menu__summary {
+  list-style: none;
+}
+
+.user-menu__summary::-webkit-details-marker {
+  display: none;
+}
+
+.user-menu__summary::marker {
+  content: "";
+}
+
+.user-menu__name {
+  font-size: 0.85rem;
+  color: #2d2417;
+}
+
+.user-menu__chevron {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.user-menu__panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  min-width: 180px;
+  background: #ffffff;
+  border: 1px solid #e0d6c8;
+  border-radius: 12px;
+  box-shadow: 0 16px 30px rgba(47, 36, 23, 0.12);
+  padding: 8px;
+  display: grid;
+  gap: 6px;
+  z-index: 20;
+}
+
+.user-menu__item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #2d2417;
+  font-family: "Inter", "Helvetica", sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+}
+
+.user-menu__item:hover {
+  background: #f4f1ea;
+  border-color: #e0d6c8;
+}
+
+.user-menu__item--danger {
+  color: #7b1f12;
+}
+
+.user-menu__form {
+  margin: 0;
+}
+
 .flash {
   max-width: 860px;
   margin: 16px auto 0;
@@ -145,6 +216,18 @@ a {
 .post-card__meta {
   font-size: 0.9rem;
   color: #6b5f50;
+}
+
+.post-card__meta-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: #c9bba7;
+  text-underline-offset: 3px;
+}
+
+.post-card__meta-link:hover {
+  color: #2d2417;
+  text-decoration-color: #2d2417;
 }
 
 .post-card__image {
@@ -359,6 +442,34 @@ a {
 .post-row__author {
   color: #6b5f50;
   font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.post-row__author-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: #c9bba7;
+  text-underline-offset: 3px;
+}
+
+.post-row__author-link:hover {
+  color: #2d2417;
+  text-decoration-color: #2d2417;
+}
+
+.post-row__date {
+  font-size: 0.8rem;
+  color: #8a7b6a;
+  text-decoration: underline;
+  text-decoration-color: #d4c8b6;
+  text-underline-offset: 3px;
+}
+
+.post-row__date:hover {
+  color: #2d2417;
+  text-decoration-color: #2d2417;
 }
 
 .post-row__tags {

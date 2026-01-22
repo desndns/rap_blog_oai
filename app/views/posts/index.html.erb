@@ -17,13 +17,20 @@
           <% end %>
           <h2><%= link_to post.title, post %></h2>
           <p class="post-card__meta">
-            <%= post.user.email %> · <%= time_ago_in_words(post.created_at) %> ago
+            <%= link_to post.user.email,
+              posts_path(user_id: post.user_id, q: @query, tag: @tag, sort: @sort, from: params[:from], to: params[:to]),
+              class: "post-card__meta-link" %>
+            ·
+            <% post_date = post.created_at.to_date %>
+            <%= link_to post_date.strftime("%d.%m.%Y"),
+              posts_path(user_id: @user_id, q: @query, tag: @tag, sort: @sort, from: post_date, to: post_date),
+              class: "post-card__meta-link post-card__meta-date" %>
           </p>
           <p><%= truncate(post.body, length: 200) %></p>
           <% if post.tags.any? %>
             <div class="tag-list">
               <% post.tags.each do |tag| %>
-                <%= link_to "##{tag.name}", posts_path(tag: tag.name, q: @query), class: "tag#{' tag--active' if @tag == tag.name}" %>
+                <%= link_to "##{tag.name}", posts_path(tag: tag.name, q: @query, sort: @sort, from: params[:from], to: params[:to], user_id: @user_id), class: "tag#{' tag--active' if @tag == tag.name}" %>
               <% end %>
             </div>
           <% end %>
