@@ -60,11 +60,19 @@
       <div class="flash flash--<%= type %>"><%= message %></div>
     <% end %>
 
-    <% if params[:tag].present? %>
+    <% active_tags = begin
+      raw_tags = params[:tags].presence || params[:tag]
+      raw_tags.is_a?(Array) ? raw_tags : raw_tags.to_s.split(",")
+    end.map { |tag| tag.to_s.strip.downcase }.reject(&:blank?).uniq %>
+    <% if active_tags.any? %>
       <div class="active-filter">
         <span>Tag:</span>
-        <span class="tag tag--active">#<%= params[:tag] %></span>
-        <% clear_tag_path = action_name == "find" ? find_path(q: params[:q], sort: params[:sort], from: params[:from], to: params[:to], user_id: params[:user_id]) : posts_path(q: params[:q]) %>
+        <div class="tag-list">
+          <% active_tags.each do |tag| %>
+            <span class="tag tag--active">#<%= tag %></span>
+          <% end %>
+        </div>
+        <% clear_tag_path = action_name == "find" ? find_path(q: params[:q], sort: params[:sort], from: params[:from], to: params[:to], user_id: params[:user_id]) : posts_path(q: params[:q], sort: params[:sort], from: params[:from], to: params[:to], user_id: params[:user_id]) %>
         <%= link_to "Clear tag", clear_tag_path, class: "button button--ghost" %>
       </div>
     <% end %>

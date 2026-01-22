@@ -5,13 +5,13 @@ class PostsController < ApplicationController
 
   def index
     @query = params[:q]
-    @tag = params[:tag]
+    @tags = parse_tags(params[:tags].presence || params[:tag])
     @sort = params[:sort].presence || "date_desc"
     @from = parse_date(params[:from])
     @to = parse_date(params[:to])
     @user_id = params[:user_id].presence
 
-    base = Post.search(@query).tagged_with(@tag).left_joins(:user, :tags).distinct
+    base = Post.search(@query).tagged_with(@tags).left_joins(:user, :tags).distinct
     base = apply_date_range(base, @from, @to)
     base = apply_user_filter(base, @user_id)
     @posts = apply_sort(base, @sort)
@@ -19,13 +19,13 @@ class PostsController < ApplicationController
 
   def find
     @query = params[:q]
-    @tag = params[:tag]
+    @tags = parse_tags(params[:tags].presence || params[:tag])
     @sort = params[:sort].presence || "date_desc"
     @from = parse_date(params[:from])
     @to = parse_date(params[:to])
     @user_id = params[:user_id].presence
 
-    base = Post.search(@query).tagged_with(@tag).left_joins(:user, :tags).distinct
+    base = Post.search(@query).tagged_with(@tags).left_joins(:user, :tags).distinct
     base = apply_date_range(base, @from, @to)
     base = apply_user_filter(base, @user_id)
     @posts = apply_sort(base, @sort)
@@ -124,5 +124,16 @@ class PostsController < ApplicationController
     Date.iso8601(value)
   rescue Date::Error
     nil
+  end
+
+  def parse_tags(value)
+    case value
+    when Array
+      value.map(&:to_s)
+    when nil
+      []
+    else
+      value.to_s.split(",")
+    end.map { |name| name.strip.downcase }.reject(&:blank?).uniq
   end
 end

@@ -18,19 +18,27 @@
           <h2><%= link_to post.title, post %></h2>
           <p class="post-card__meta">
             <%= link_to post.user.email,
-              posts_path(user_id: post.user_id, q: @query, tag: @tag, sort: @sort, from: params[:from], to: params[:to]),
+              posts_path(user_id: post.user_id, q: @query, tags: @tags, sort: @sort, from: params[:from], to: params[:to]),
               class: "post-card__meta-link" %>
             ·
             <% post_date = post.created_at.to_date %>
             <%= link_to post_date.strftime("%d.%m.%Y"),
-              posts_path(user_id: @user_id, q: @query, tag: @tag, sort: @sort, from: post_date, to: post_date),
+              posts_path(user_id: @user_id, q: @query, tags: @tags, sort: @sort, from: post_date, to: post_date),
               class: "post-card__meta-link post-card__meta-date" %>
           </p>
           <p><%= truncate(post.body, length: 200) %></p>
           <% if post.tags.any? %>
             <div class="tag-list">
               <% post.tags.each do |tag| %>
-                <%= link_to "##{tag.name}", posts_path(tag: tag.name, q: @query, sort: @sort, from: params[:from], to: params[:to], user_id: @user_id), class: "tag#{' tag--active' if @tag == tag.name}" %>
+                <% next_tags = (@tags || []).dup %>
+                <% if next_tags.include?(tag.name) %>
+                  <% next_tags = next_tags - [tag.name] %>
+                <% else %>
+                  <% next_tags << tag.name %>
+                <% end %>
+                <%= link_to "##{tag.name}",
+                  posts_path(tags: next_tags, q: @query, sort: @sort, from: params[:from], to: params[:to], user_id: @user_id),
+                  class: "tag#{' tag--active' if (@tags || []).include?(tag.name)}" %>
               <% end %>
             </div>
           <% end %>

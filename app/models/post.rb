@@ -18,15 +18,25 @@ class Post < ApplicationRecord
     ).distinct
   }
 
-  scope :tagged_with, lambda { |name|
-    return all if name.blank?
+  scope :tagged_with, lambda { |names|
+    names = Array(names).map { |name| name.to_s.strip.downcase }.reject(&:blank?).uniq
+    return all if names.empty?
 
-    tag = Tag.find_by(name: name.to_s.strip.downcase)
-    return none unless tag
+    tags = Tag.where(name: names)
+    return none if tags.empty?
 
-    post_ids = tag.taggings.where(taggable_type: "Post").select(:taggable_id)
-    comment_post_ids = Comment.joins(:taggings).where(taggings: { tag_id: tag.id }).select(:post_id)
+    tag_ids = tags.select(:id)
+    tag_count = tags.count
 
-    where(id: post_ids).or(where(id: comment_post_ids)).distinct
+    post_taggings = Tagging.where(taggable_type: "Post", tag_id: tag_ids)
+      .select("taggable_id AS post_id, tag_id")
+    comment_taggings = Tagging.joins("INNER JOIN comments ON comments.id = taggings.taggable_id")
+      .where(taggable_type: "Comment", tag_id: tag_ids)
+      .select("comments.post_id AS post_id, taggings.tag_id")
+    union_sql = "#{post_taggings.to_sql} UNION ALL #{comment_taggings.to_sql}"
+
+    joins("INNER JOIN (#{union_sql}) AS combined_tags ON combined_tags.post_id = posts.id")
+      .group("posts.id")
+      .having("COUNT(DISTINCT combined_tags.tag_id) = ?", tag_count)
   }
 end

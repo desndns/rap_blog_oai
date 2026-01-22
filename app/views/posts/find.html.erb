@@ -9,8 +9,10 @@
     <% if @query.present? %>
       <%= form.hidden_field :q, value: @query %>
     <% end %>
-    <% if @tag.present? %>
-      <%= form.hidden_field :tag, value: @tag %>
+    <% if @tags.present? %>
+      <% @tags.each do |tag| %>
+        <%= form.hidden_field :tags, value: tag %>
+      <% end %>
     <% end %>
     <% if @sort.present? %>
       <%= form.hidden_field :sort, value: @sort %>
@@ -30,7 +32,7 @@
 
     <div class="form__actions">
       <%= form.submit "Применить", class: "button" %>
-      <%= link_to "Сбросить", find_path(q: @query, tag: @tag, sort: @sort, user_id: @user_id), class: "button button--ghost" %>
+      <%= link_to "Сбросить", find_path(q: @query, tags: @tags, sort: @sort, user_id: @user_id), class: "button button--ghost" %>
     </div>
   <% end %>
 
@@ -41,15 +43,23 @@
           <%= link_to post.title, post %>
         </div>
         <div class="post-row__author">
-          <%= link_to post.user.email, find_path(user_id: post.user_id, q: @query, tag: @tag, sort: @sort, from: params[:from], to: params[:to]), class: "post-row__author-link" %>
+          <%= link_to post.user.email, find_path(user_id: post.user_id, q: @query, tags: @tags, sort: @sort, from: params[:from], to: params[:to]), class: "post-row__author-link" %>
           <% post_date = post.created_at.to_date %>
           <%= link_to post_date.strftime("%d.%m.%Y"),
-            find_path(user_id: @user_id, q: @query, tag: @tag, sort: @sort, from: post_date, to: post_date),
+            find_path(user_id: @user_id, q: @query, tags: @tags, sort: @sort, from: post_date, to: post_date),
             class: "post-row__date" %>
         </div>
         <div class="post-row__tags">
           <% post.tags.each do |tag| %>
-            <%= link_to "##{tag.name}", find_path(tag: tag.name, q: @query, sort: @sort, from: params[:from], to: params[:to], user_id: @user_id), class: "tag" %>
+            <% next_tags = (@tags || []).dup %>
+            <% if next_tags.include?(tag.name) %>
+              <% next_tags = next_tags - [tag.name] %>
+            <% else %>
+              <% next_tags << tag.name %>
+            <% end %>
+            <%= link_to "##{tag.name}",
+              find_path(tags: next_tags, q: @query, sort: @sort, from: params[:from], to: params[:to], user_id: @user_id),
+              class: "tag#{' tag--active' if (@tags || []).include?(tag.name)}" %>
           <% end %>
         </div>
       </div>
