@@ -40,7 +40,12 @@
     <% @posts.each do |post| %>
       <div class="post-row">
         <div class="post-row__title">
-          <%= link_to post.title, post %>
+          <%= link_to post.title, post, class: "post-row__title-link" %>
+          <% if post.images.attached? %>
+            <span class="post-row__preview">
+              <%= image_tag post.images.first, class: "post-row__preview-image" %>
+            </span>
+          <% end %>
         </div>
         <div class="post-row__author">
           <%= link_to post.user.email, find_path(user_id: post.user_id, q: @query, tags: @tags, sort: @sort, from: params[:from], to: params[:to]), class: "post-row__author-link" %>
