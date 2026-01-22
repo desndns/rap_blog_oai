@@ -30,6 +30,7 @@
           <%= link_to "Rap Blog", root_path %>
         </div>
         <nav class="site-header__nav">
+          <%= link_to "Все посты", posts_path, class: "button button--ghost" %>
           <%= link_to "НАЙТИ", find_path, class: "button button--ghost" %>
           <%= form_with url: posts_path, method: :get, class: "site-search" do |form| %>
             <% if params[:tag].present? %>
